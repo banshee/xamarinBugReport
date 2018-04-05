@@ -15,10 +15,10 @@ namespace CallbackBugRepro
         //type StringDelegate = delegate of string -> unit
         public delegate void StringDelegate(string s);
 
-        [DllImport("__Internal", EntryPoint = "setMiddlemanMergeCB")]
+        [DllImport("__Internal", EntryPoint = "setMiddlemanMergeCB", CallingConvention = CallingConvention.Cdecl)]
         public extern static void setMiddlemanMergeCB(StringDelegate level);
 
-        [DllImport("__Internal", EntryPoint = "noParameters")]
+        [DllImport("__Internal")]
         public extern static void noParameters();
 
         // class-level declarations
@@ -29,7 +29,8 @@ namespace CallbackBugRepro
             set;
         }
 
-        public void MyDelegate(string s) {
+        [ObjCRuntime.MonoPInvokeCallback(typeof(StringDelegate))]
+        public static void MyDelegate(string s) {
             Console.WriteLine("in string callback, parameter is " + s);
         }
 
